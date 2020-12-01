@@ -38,9 +38,3 @@ public class Day1 {
 	System.out.println("Done");
   }
 }
-
-public class CombinationPossibility{
-	int value1;
-	int value2;
-}
-
