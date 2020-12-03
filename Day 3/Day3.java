@@ -15,7 +15,7 @@ public class Day3 {
             int lineCounter = 0;
             boolean keepReading = true;
             int c = reader.read();
-            myTerrain.arborealTopography.add(new ArrayList<Boolean>()); // add 0th row
+            myTerrain.arborealTopography.add(new ArrayList<>()); // add 0th row
             while (keepReading) {
                 switch (c) {
                     case 46: // . Empty Space
@@ -32,7 +32,7 @@ public class Day3 {
                         break;
                     case 10: // NL
                         lineCounter++;
-                        myTerrain.arborealTopography.add(new ArrayList<Boolean>()); // add new row
+                        myTerrain.arborealTopography.add(new ArrayList<>()); // add new row
                         break;
                     default:
                         printer = "unknown char " + c;
