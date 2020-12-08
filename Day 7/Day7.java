@@ -52,7 +52,9 @@ public class Day7 {
             e.printStackTrace();
         }
 
+        // Part One
         int canContainOneGoldBag = 0; // Count the number of bags and parent bags that can hold a shiny gold bag
+        ArrayList<LuggageRule> processingRulesCopy1 = processingRules;
         Queue<BagDescription> queue = new LinkedList<>(); // a target list of bags than can hold gold or parents of gold
         BagDescription goldBag = new BagDescription();
         goldBag.descripOne = "shiny";
@@ -60,24 +62,53 @@ public class Day7 {
         queue.add(goldBag); // Add golden ticket to search queue
         while (!queue.isEmpty()) {
             BagDescription currentTargetBag = queue.poll(); // get new search target
-            for (int i = 0; i < processingRules.size(); i++) {
-                for (int j = 0; j < processingRules.get(i).childDescriptions.size(); j++) { // search list for target
-                    if (processingRules.get(i).childDescriptions.get(j).descripOne.contains(currentTargetBag.descripOne)
-                            && processingRules.get(i).childDescriptions.get(j).descripTwo
+            for (int i = 0; i < processingRulesCopy1.size(); i++) {
+                for (int j = 0; j < processingRulesCopy1.get(i).childDescriptions.size(); j++) { // search list for
+                    // target
+                    if (processingRulesCopy1.get(i).childDescriptions.get(j).descripOne
+                            .contains(currentTargetBag.descripOne)
+                            && processingRulesCopy1.get(i).childDescriptions.get(j).descripTwo
                                     .contains(currentTargetBag.descripTwo)) {
                         // add parent to queue
                         BagDescription newTargetBag = new BagDescription();
-                        newTargetBag.descripOne = processingRules.get(i).parentDescription.descripOne;
-                        newTargetBag.descripTwo = processingRules.get(i).parentDescription.descripTwo;
+                        newTargetBag.descripOne = processingRulesCopy1.get(i).parentDescription.descripOne;
+                        newTargetBag.descripTwo = processingRulesCopy1.get(i).parentDescription.descripTwo;
                         queue.add(newTargetBag);
+                        processingRulesCopy1.remove(i);
+                        i = 0; // start from top
                         canContainOneGoldBag++;
-                        break;
+                    }
+                }
+            }
+        }
+        printer = "Can Contain One Gold Bag: " + canContainOneGoldBag;
+        System.out.println(printer);
+
+        // Part Two
+        int totalBagCount = 0;
+        ArrayList<LuggageRule> processingRulesCopy2 = processingRules;
+        Queue<BagDescription> queue2 = new LinkedList<>(); // a target list of bags than can hold gold or parents of
+                                                           // gold
+        queue2.add(goldBag); // Add golden ticket to search queue
+        while (!queue2.isEmpty()) {
+            // look for parent of golden bag. add childern
+            BagDescription currentTargetBag = queue2.poll(); // get new search target
+            for (int i = 0; i < processingRulesCopy2.size(); i++) {
+                if (processingRulesCopy2.get(i).parentDescription.descripOne.contains(currentTargetBag.descripOne)
+                        && processingRulesCopy2.get(i).parentDescription.descripTwo
+                                .contains(currentTargetBag.descripTwo)) {
+                    // add children to queue
+                    for (int j = 0; j < processingRulesCopy2.get(i).childDescriptions.size(); j++) {
+                        for (int x = 0; x < processingRulesCopy2.get(i).childDescriptions.get(j).maxBags; x++) {
+                            totalBagCount++;
+                            queue2.add(processingRulesCopy2.get(i).childDescriptions.get(j));
+                        }
                     }
                 }
             }
         }
 
-        printer = "Can Contain One Gold Bag: " + canContainOneGoldBag;
+        printer = "Total Bags: " + totalBagCount;
         System.out.println(printer);
     }
 }
