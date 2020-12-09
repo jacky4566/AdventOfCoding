@@ -4,8 +4,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Day7 {
-    public static final int AIRPLANEROWS = 128;
-    public static final int AIRPLANECOLS = 8;
 
     public static void main(String[] args) throws IOException {
         String printer = "Solving Advent of Coding Day 7";

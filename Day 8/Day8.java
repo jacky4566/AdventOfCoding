@@ -1,22 +1,20 @@
 import java.io.*;
 import java.util.*;
+import static java.util.stream.Collectors.toList;
 
 public class Day8 {
-    public static final int AIRPLANEROWS = 128;
-    public static final int AIRPLANECOLS = 8;
-
     public static void main(String[] args) throws IOException {
         String printer = "Solving Advent of Coding Day 8";
         System.out.println(printer);
         // Setup array of passports
-        ArrayList<Instruction> instructionSet = new ArrayList<>();
+        List<Instruction> instructionSet = new ArrayList<>();
         // Read file and put into list
         try {
             File myObj = new File("input.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String newData = myReader.nextLine();
-                String splitData[] = newData.split(" ");
+                String[] splitData = newData.split(" ");
                 Instruction newInstruction = new Instruction();
                 newInstruction.operation = splitData[0].charAt(0);
                 newInstruction.argument = Integer.parseInt(splitData[1]);
@@ -30,22 +28,20 @@ public class Day8 {
             e.printStackTrace();
         }
 
-        // Traverse code
         long accumulator = 0;
         int codePosition = 0;
-        while (instructionSet.get(codePosition).executionCounter < 1) {// run till we are done
-            instructionSet.get(codePosition).executionCounter++;
-            printer = "Instruction " + codePosition + " : " + instructionSet.get(codePosition).operation + " : " + instructionSet.get(codePosition).argument;
-            System.out.println(printer);
-            switch (instructionSet.get(codePosition).operation) {
+        List<Instruction> part1Set = List.copyOf(instructionSet);
+        while (part1Set.get(codePosition).executionCounter < 1) {// run till we are done
+            part1Set.get(codePosition).executionCounter++;
+            switch (part1Set.get(codePosition).operation) {
                 case 'n': // No Op
                     codePosition++;
                     break;
                 case 'j': // Jump
-                    codePosition = codePosition + instructionSet.get(codePosition).argument;
+                    codePosition = codePosition + part1Set.get(codePosition).argument;
                     break;
                 case 'a': // Add to accumulator
-                    accumulator = accumulator + instructionSet.get(codePosition).argument;
+                    accumulator = accumulator + part1Set.get(codePosition).argument;
                     codePosition++;
                     break;
                 default:
@@ -53,12 +49,69 @@ public class Day8 {
                     System.out.println(printer);
                     break;
             }
-            if (codePosition > instructionSet.size()) {
-                codePosition = codePosition - instructionSet.size();
+            if (codePosition > part1Set.size()) {
+                codePosition = codePosition - part1Set.size();
             }
         }
-        printer = "accumulator " + accumulator;
+        printer = "Part 1 Accumulator " + accumulator;
         System.out.println(printer);
+        System.out.println();
+
+        // Part 2 Traverse code
+        accumulator = 0;
+        for (int i = 0; i < instructionSet.size(); i++) {
+            printer = "Change Position " + i;
+            System.out.println(printer);
+            List<Instruction> modifiedSet = instructionSet.stream().collect(toList());
+            if (modifiedSet.get(i).operation == 'j') {
+                modifiedSet.get(i).operation = 'n';
+            } else if (modifiedSet.get(i).operation == 'n') {
+                modifiedSet.get(i).operation = 'j';
+            }
+            accumulator = execute(modifiedSet);
+            if (accumulator > 0) {
+                break;
+            }
+            for (int j = 0; j < instructionSet.size(); j++) { // dump list
+                printer = modifiedSet.get(j).operation + " " + modifiedSet.get(j).argument;
+                System.out.println(printer);
+            }
+            System.out.println();
+        }
+        printer = "Part 2 Accumulator " + accumulator;
+        System.out.println(printer);
+    }
+
+    public static long execute(List<Instruction> instructions) {
+        long accumulator = 0;
+        int codePosition = 0;
+        String printer = "Starting new exec";
+        System.out.println(printer);
+        while (codePosition < instructions.size()) {// run till we are done
+            printer = "position " + codePosition + " " + instructions.get(codePosition).operation;
+            System.out.println(printer);
+            if (instructions.get(codePosition).executionCounter > 0) {// we already visted this node
+                return -1;
+            }
+            instructions.get(codePosition).executionCounter++;
+            switch (instructions.get(codePosition).operation) {
+                case 'n': // No Op
+                    codePosition++;
+                    break;
+                case 'j': // Jump
+                    codePosition = codePosition + instructions.get(codePosition).argument;
+                    break;
+                case 'a': // Add to accumulator
+                    accumulator = accumulator + instructions.get(codePosition).argument;
+                    codePosition++;
+                    break;
+                default:
+                    printer = "Error";
+                    System.out.println(printer);
+                    break;
+            }
+        }
+        return accumulator;
     }
 }
 
