@@ -27,52 +27,58 @@ public class Day8 {
             e.printStackTrace();
         }
 
-        /*
-         * long accumulator = 0; int codePosition = 0; List<Instruction> part1Set =
-         * List.copyOf(instructionSet); while
-         * (part1Set.get(codePosition).executionCounter < 1) {// run till we are done
-         * part1Set.get(codePosition).executionCounter++; switch
-         * (part1Set.get(codePosition).operation) { case 'n': // No Op codePosition++;
-         * break; case 'j': // Jump codePosition = codePosition +
-         * part1Set.get(codePosition).argument; break; case 'a': // Add to accumulator
-         * accumulator = accumulator + part1Set.get(codePosition).argument;
-         * codePosition++; break; default: printer = "Error";
-         * System.out.println(printer); break; } if (codePosition > part1Set.size()) {
-         * codePosition = codePosition - part1Set.size(); } } printer =
-         * "Part 1 Accumulator " + accumulator; System.out.println(printer);
-         * System.out.println();
-         */
+        long accumulator1 = 0;
+        int codePosition = 0;
+        List<Instruction> modifiedSet1 = new ArrayList<>();
+            for (Instruction p : instructionSet) {
+                modifiedSet1.add(p.copy());
+            }
+        while (modifiedSet1.get(codePosition).executionCounter < 1) {// run till we are done
+            modifiedSet1.get(codePosition).executionCounter++;
+            switch (modifiedSet1.get(codePosition).operation) {
+                case 'n': // No Op
+                    codePosition++;
+                    break;
+                case 'j': // jump
+                    codePosition = codePosition + modifiedSet1.get(codePosition).argument;
+                    break;
+                case 'a': // Add to accumulator
+                    accumulator1 = accumulator1 + modifiedSet1.get(codePosition).argument;
+                    codePosition++;
+                    break;
+                default:
+                    printer = "Error";
+                    System.out.println(printer);
+                    break;
+            }
+            if (codePosition > modifiedSet1.size()) {
+                codePosition = codePosition - modifiedSet1.size();
+            }
+        }
+        printer = "Part 1 Accumulator " + accumulator1;
+        System.out.println(printer);
 
         // Part 2 Traverse code
-        long accumulator = 0;
+        long accumulator2 = 0;
         for (int i = 0; i < instructionSet.size(); i++) { // Go through list changing one value at a time
-            printer = "Change Position " + i;
-            System.out.println(printer);
-            List<Instruction> modifiedSet = List.copyOf(instructionSet); // Copy to new list. Appears broken?
+            List<Instruction> modifiedSet = new ArrayList<>();
+            for (Instruction p : instructionSet) {
+                modifiedSet.add(p.copy());
+            }
             modifiedSet.get(i).swapOP(); // Swap operations
-            accumulator = execute(modifiedSet);
-            if (accumulator > 0) {
+            accumulator2 = execute(modifiedSet);
+            if (accumulator2 > 0) {
                 break;
-            } else {
-                modifiedSet.get(i).swapOP();// swap back for broken copy
             }
-            for (int p = 0; p < instructionSet.size(); p++) { // reset executionCounters since copy is broken
-                instructionSet.get(p).executionCounter = 0;
-            }
-            System.out.println();
         }
-        printer = "Part 2 Accumulator " + accumulator;
+        printer = "Part 2 Accumulator " + accumulator2;
         System.out.println(printer);
     }
 
     public static long execute(List<Instruction> instructions) {
         long accumulator = 0;
         int codePosition = 0;
-        String printer = "Starting new exec";
-        System.out.println(printer);
         while (codePosition < instructions.size()) {// run till we are done
-            printer = "position " + codePosition + " " + instructions.get(codePosition).operation;
-            System.out.println(printer);
             if (instructions.get(codePosition).executionCounter > 0) {// we already visted this node
                 return -1;
             }
@@ -89,7 +95,7 @@ public class Day8 {
                     codePosition++;
                     break;
                 default:
-                    printer = "Error";
+                    String printer = "Error";
                     System.out.println(printer);
                     break;
             }
@@ -97,19 +103,6 @@ public class Day8 {
         return accumulator;
     }
 
-    private static Object deepCopy(Object object) {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream);
-            outputStrm.writeObject(object);
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
-            return objInputStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
 
 class Instruction { // defines a piece of luggage and its count
@@ -123,5 +116,13 @@ class Instruction { // defines a piece of luggage and its count
         } else if (this.operation == 'n') {
             this.operation = 'j';
         }
+    }
+
+    public Instruction copy() { //used to make a deep copy
+        Instruction r = new Instruction();
+        r.operation = this.operation;
+        r.argument = this.argument;
+        r.executionCounter = 0;
+        return r;
     }
 }
