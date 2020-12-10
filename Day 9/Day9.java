@@ -6,7 +6,7 @@ public class Day9 {
         String printer = "Solving Advent of Coding Day 9";
         System.out.println(printer);
         // Setup array of passports
-        int preambleLength = 5;
+        int preambleLength = 25;
         List<Long> inputData = new ArrayList<>();
         // Read file and put into list
         try {
@@ -24,7 +24,7 @@ public class Day9 {
             e.printStackTrace();
         }
 
-        //Part 1 Solution
+        // Part 1 Solution
         long fracture = -1;
         for (int i = preambleLength; i < inputData.size(); i++) { // start at the 5th number
             long testNumber = inputData.get(i).longValue();
@@ -33,7 +33,7 @@ public class Day9 {
                 for (int h = i - preambleLength; h < i && failTest; h++) { // check the past preambles
                     if (inputData.get(j).longValue() + inputData.get(h).longValue() == testNumber) {
                         failTest = false;
-                    }else{
+                    } else {
                         fracture = testNumber;
                     }
                 }
@@ -41,11 +41,29 @@ public class Day9 {
             if (failTest) {
                 printer = "Item failed test " + fracture;
                 System.out.println(printer);
+                break;
             }
         }
-        //Part Two
+        // Part Two
+        for (int i = 2; i < inputData.size(); i++) { // start at the 2nd number
+            long accumulator = 0;
+            long smallest = 99999999;
+            long largest = 0;
+            for (int j = i; j < inputData.size(); j++) {
+                long nextValue = inputData.get(j).longValue();
+                accumulator = accumulator + nextValue;
+                if (nextValue > largest){
+                    largest = nextValue;
+                }
+                if (nextValue < smallest){
+                    smallest = nextValue;
+                }
+                if (accumulator == fracture) {
+                    printer = "Found: " + i + " " + j + " " + (smallest + largest);
+                    System.out.println(printer);
+                }
+            }
 
-
+        }
     }
-
 }
