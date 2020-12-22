@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Day10",
+            "request": "launch",
+            "mainClass": "Day10",
+            "projectName": "Day 10_a9dd73e9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Day9",
+            "request": "launch",
+            "mainClass": "Day9",
+            "projectName": "Day 9_fd38b12f"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Day8",
+            "request": "launch",
+            "mainClass": "Day8",
+            "projectName": "Day 8_fd38b12e"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Day7",
+            "request": "launch",
+            "mainClass": "Day7",
+            "projectName": "Day 7_fd38b12d"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Day6<Day 6_fd38b12c>",
+            "request": "launch",
+            "mainClass": "Day6",
+            "projectName": "Day 6_fd38b12c"
+        }
+    ]
+}
